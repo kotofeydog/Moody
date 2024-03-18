@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useContext, useState, useEffect } from "react";
 import Image from "../image";
 import "./cart.scss"
 import Title from "../Title";
@@ -6,6 +6,8 @@ import { default as Btn } from "../Button";
 import { Button, Flex, Typography } from "antd";
 import { TbShoppingBag } from "react-icons/tb";
 import { IoMdHeartEmpty } from "react-icons/io";
+import { ContextSaved } from "../../context/saved";
+
 const Cart = ({ type, key, className, body, title, href, image, vertical, horizontal, stars = 0, price = 0, colors = [], saved = false, ...props }) => {
     const star = [...Array(stars)].map((item, point) => {
         return point <= stars ? (
@@ -32,6 +34,8 @@ const Cart = ({ type, key, className, body, title, href, image, vertical, horizo
             </Fragment>
         )
     });
+
+    const { CheckSaved } = useContext(ContextSaved);
 
     if (type === "common") {
         className = `Cart Cart__common ${className}`;
@@ -86,15 +90,24 @@ const Cart = ({ type, key, className, body, title, href, image, vertical, horizo
             )
         })
 
+        const handleReset = e => {
+            if (e.target.tagName.toLowerCase() === "svg" ||
+                e.target.tagName.toLowerCase() === "span" ||
+                e.target.tagName.toLowerCase() === "button"
+            ) {
+                e.preventDefault()
+            }
+        }
+
         return (
             <Fragment key={key}>
                 <div className={className} {...props}>
-                    <Btn href={href} secondary className={`Cart__link`}>
+                    <Btn href={href} onClick={handleReset} secondary className={`Cart__link`}>
                         <Image src={image} alt={title} className={`Cart__vertical-img`}>
                             <Flex className="Cart__options" gap={20} align={"center"} justify={"center"}>
                                 <Button icon={<TbShoppingBag />} />
                                 <span className={`Cart__options-line`}>&#124;</span>
-                                <Button icon={<IoMdHeartEmpty />} className={saved ? `saved` : ""} />
+                                <Button onClick={() => CheckSaved(props.savedproduct)} icon={<IoMdHeartEmpty />} className={saved ? `saved` : ""} />
                             </Flex>
                         </Image>
                         <Title level={"h3"} className={`Cart__vertical-title`}>{title}</Title>

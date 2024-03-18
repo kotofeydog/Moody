@@ -98,6 +98,7 @@ const Catalog = () => {
                         title={product.title}
                         colors={product.colors}
                         price={product.price}
+                        savedproduct={product}
                     />
                 </Fragment>
             )
